@@ -3,370 +3,125 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>[Your Name] — Interactive CV</title>
-  <meta name="description" content="Interactive Curriculum Vitae of [Your Name]" />
+  <title>Erik Môcik — Interactive CV</title>
+  <meta name="description" content="Interactive Curriculum Vitae of Bc. Erik Môcik" />
   <meta name="color-scheme" content="light dark">
   <style>
-    /* ----------- Design tokens ----------- */
-    :root {
-      --bg: #0b0c0f;
-      --panel: #13151a;
-      --soft: #1c1f26;
-      --text: #e6e7ea;
-      --muted: #a9afbd;
-      --brand: #7c9cff;
-      --accent: #22c55e;
-      --danger: #ef4444;
-      --ring: rgba(124, 156, 255, .35);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-    :root.light {
-      --bg: #fbfbfc;
-      --panel: #ffffff;
-      --soft: #f2f3f6;
-      --text: #0b0c0f;
-      --muted: #4b5565;
-      --brand: #3055ff;
-      --accent: #16a34a;
-      --danger: #dc2626;
-      --ring: rgba(48, 85, 255, .25);
-      --shadow: 0 10px 30px rgba(12, 19, 38, .08);
-    }
-
-    /* ----------- Base ----------- */
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: var(--bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    a { color: var(--brand); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    img { max-width: 100%; display: block; }
-    .visually-hidden { position:absolute; clip: rect(0 0 0 0); clip-path: inset(50%); height: 1px; width: 1px; overflow: hidden; white-space: nowrap; }
-
-    /* ----------- Layout ----------- */
-    .wrapper { max-width: 1120px; margin: 24px auto; padding: 0 16px; }
-    .grid {
-      display: grid; gap: 24px;
-      grid-template-columns: 300px 1fr;
-    }
-    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-
-    .card { background: var(--panel); border: 1px solid rgba(125,130,160,.12); border-radius: 16px; box-shadow: var(--shadow); }
-    .card.pad { padding: 20px; }
-    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: var(--soft); border: 1px solid rgba(125,130,160,.16); font-size: 12px; }
-    .chip[data-active="true"] { outline: 3px solid var(--ring); }
-
-    /* ----------- Header ----------- */
-    header.toolbar {
-      position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(1.2) blur(8px);
-      background: color-mix(in oklab, var(--bg) 86%, transparent);
-      border-bottom: 1px solid rgba(125,130,160,.18);
-    }
-    .toolbar-inner { max-width: 1120px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 12px; }
-    .toolbar-inner .spacer { flex: 1; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(125,130,160,.18);
-      background: var(--panel); color: var(--text); cursor: pointer;
-    }
-    .btn:hover { box-shadow: var(--shadow); }
-    .btn[aria-pressed="true"] { outline: 3px solid var(--ring); }
-    input[type="search"], input[type="text"] { height: 36px; border-radius: 10px; border: 1px solid rgba(125,130,160,.28); background: var(--panel); color: var(--text); padding: 0 12px; }
-
-    /* ----------- Sidebar ----------- */
-    .sidebar { position: sticky; top: 68px; align-self: start; display: grid; gap: 16px; }
-    .avatar { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 14px; border: 1px solid rgba(125,130,160,.16); background: var(--soft); }
-    .name { font-size: 28px; font-weight: 800; line-height: 1.2; }
-    .title { font-size: 14px; color: var(--muted); }
-    .contact a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: var(--soft); border: 1px solid rgba(125,130,160,.12); margin: 4px 6px 0 0; }
-
-    nav.quick a { display: block; padding: 10px 12px; border-radius: 10px; color: var(--text); border: 1px solid rgba(125,130,160,.12); background: var(--panel); margin-top: 8px; }
-    nav.quick a:hover { background: var(--soft); }
-
-    /* ----------- Main ----------- */
-    main { display: grid; gap: 16px; }
-    section { scroll-margin-top: 80px; }
-    section > h2 { margin: 0 0 10px; font-size: 20px; letter-spacing: .2px; }
-    .section-card { padding: 18px; }
-    .list { display: grid; gap: 12px; }
-
-    .item { padding: 16px; border-radius: 14px; background: var(--soft); border: 1px solid rgba(125,130,160,.12); display: grid; gap: 8px; }
-    .item .topline { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-    .item .role { font-weight: 700; }
-    .item .org { color: var(--muted); }
-    .item .period { margin-left: auto; color: var(--muted); font-size: 13px; }
-    .item .tags { display: flex; gap: 8px; flex-wrap: wrap; }
-    .item mark { background: color-mix(in oklab, var(--brand) 30%, transparent); padding: 0 3px; border-radius: 4px; }
-
-    details[open] summary::marker { content: "\25BC "; }
-    summary { cursor: pointer; font-weight: 600; }
-    details .bullets { margin: 8px 0 0 0; padding-left: 20px; }
-
-    .skills { display: flex; flex-wrap: wrap; gap: 8px; }
-
-    .footer-note { color: var(--muted); font-size: 12px; text-align: center; padding: 16px; }
-
-    /* ----------- Print (Generate PDF) ----------- */
-    @media print {
-      header.toolbar, .sidebar .contact, .toolbar-actions, .search, .theme-only { display: none !important; }
-      .wrapper { max-width: 100%; margin: 0; }
-      .grid { grid-template-columns: 1fr; }
-      body { background: white; color: black; }
-      .card, .item { box-shadow: none; }
-      details { border: none; }
-      details[open] { page-break-inside: avoid; }
-    }
+    body {font-family: system-ui, sans-serif; margin:0; padding:0; background:#f8f9fa; color:#222;}
+    header {background:#1a1a1a; color:white; padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0;}
+    header h1 {margin:0; font-size:1.4rem;}
+    main {max-width:900px; margin:2rem auto; background:white; padding:2rem; border-radius:10px; box-shadow:0 2px 12px rgba(0,0,0,0.1);}
+    section {margin-bottom:2rem;}
+    h2 {border-bottom:2px solid #007acc; padding-bottom:0.3rem; color:#007acc;}
+    .skills, .languages {display:flex; flex-wrap:wrap; gap:8px;}
+    .chip {background:#eaf3ff; color:#003366; padding:4px 10px; border-radius:20px; font-size:0.9rem;}
+    .exp-item {margin-bottom:1rem;}
+    .exp-item strong {display:block; font-size:1.1rem;}
+    footer {text-align:center; color:#555; margin-top:3rem; font-size:0.9rem;}
   </style>
 </head>
 <body>
-  <header class="toolbar" role="navigation" aria-label="Toolbar">
-    <div class="toolbar-inner">
-      <strong>[Your Name]</strong>
-      <span class="spacer"></span>
-      <input id="search" class="search" type="search" placeholder="Search roles, skills, projects…" aria-label="Search CV" />
-      <button id="themeToggle" class="btn" type="button" aria-pressed="false" aria-label="Toggle theme">Toggle theme</button>
-      <button id="printBtn" class="btn" type="button" aria-label="Save as PDF">Save as PDF</button>
+  <header>
+    <h1>Bc. Erik Môcik</h1>
+    <div>
+      <a href="mailto:erik.mocik@gmail.com" style="color:white; text-decoration:none;">erik.mocik@gmail.com</a>
     </div>
   </header>
+  <main>
+    <section id="summary">
+      <h2>About Me</h2>
+      <p>I consider myself a responsible and flexible person who can work under stress. I enjoy working with people, have a team spirit, and constantly seek challenges and new experiences.</p>
+      <p><strong>Location:</strong> Bratislava, Slovak Republic</p>
+    </section>
 
-  <div class="wrapper">
-    <div class="grid">
-      <!-- ======== Sidebar ======== -->
-      <aside class="sidebar">
-        <div class="card pad" aria-label="Profile">
-          <img class="avatar" src="photo.jpg" alt="Portrait of [Your Name]" loading="lazy" />
-          <div class="name">[Your Name]</div>
-          <div class="title">[Your Role] · [City, Country]</div>
-          <div class="contact" aria-label="Contact links">
-            <!-- Replace with your links -->
-            <a href="mailto:you@example.com">you@example.com</a>
-            <a href="https://linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="https://github.com/your-handle" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://your-site.com" target="_blank" rel="noopener">Website</a>
-          </div>
-        </div>
+    <section id="skills">
+      <h2>Skills</h2>
+      <div class="skills">
+        <span class="chip">AI (Beginner)</span>
+        <span class="chip">Python (Basic)</span>
+        <span class="chip">C (Skillful)</span>
+        <span class="chip">Java (Skillful)</span>
+        <span class="chip">Matlab (Skillful)</span>
+        <span class="chip">Tecnomatix Process Simulate (Skillful)</span>
+        <span class="chip">Simulink (Basic)</span>
+        <span class="chip">Siemens TIA Portal (Basic)</span>
+        <span class="chip">Tecnomatix Plant Simulation (Basic)</span>
+        <span class="chip">ROS (Basic)</span>
+        <span class="chip">Microsoft Excel (Skillful)</span>
+        <span class="chip">ABAP (Basic)</span>
+      </div>
+    </section>
 
-        <nav class="quick card pad" aria-label="Quick navigation">
-          <strong>Sections</strong>
-          <a href="#summary">Summary</a>
-          <a href="#experience">Experience</a>
-          <a href="#projects">Projects</a>
-          <a href="#skills">Skills</a>
-          <a href="#education">Education</a>
-          <a href="#certs">Certifications</a>
-        </nav>
+    <section id="experience">
+      <h2>Work Experience</h2>
+      <div class="exp-item">
+        <strong>IT Support — STAVISIMO - Property Management s.r.o.</strong>
+        <em>June 2023 – October 2023</em>
+        <ul>
+          <li>Provided technical support and solved IT problems for employees and clients.</li>
+          <li>Handled communication in both Slovak and English, ensuring efficient resolution of issues.</li>
+        </ul>
+      </div>
+      <div class="exp-item">
+        <strong>Head Chef — Work & Travel USA, Ocean City, New Jersey</strong>
+        <em>June 2022 – September 2022</em>
+        <ul>
+          <li>Managed communication with suppliers and maintained professional relationships.</li>
+          <li>Led and organized a team, emphasizing collaboration and efficiency.</li>
+        </ul>
+      </div>
+      <div class="exp-item">
+        <strong>SAP ABAP Developer Trainee — SNP Slovakia, s.r.o.</strong>
+        <em>November 2021 – June 2022</em>
+        <ul>
+          <li>Participated in the development and maintenance of SAP software applications.</li>
+          <li>Collaborated with experienced developers to gain practical ABAP programming experience.</li>
+        </ul>
+      </div>
+      <div class="exp-item">
+        <strong>IT and Technical Department Assistant — LeasePlan Slovakia</strong>
+        <em>May 2018 – May 2022</em>
+        <ul>
+          <li>Managed user units and vehicle registration in the corporate IT system NOLS.</li>
+        </ul>
+      </div>
+    </section>
 
-        <div class="card pad">
-          <strong>Filters</strong>
-          <div id="skillFilters" class="skills" role="listbox" aria-label="Filter by skill">
-            <!-- Add/rename chips to match your stack -->
-            <button class="chip" data-skill="python" aria-pressed="false" type="button">Python</button>
-            <button class="chip" data-skill="sql" aria-pressed="false" type="button">SQL</button>
-            <button class="chip" data-skill="powerbi" aria-pressed="false" type="button">Power BI</button>
-            <button class="chip" data-skill="llm" aria-pressed="false" type="button">LLM</button>
-            <button class="chip" data-skill="leadership" aria-pressed="false" type="button">Leadership</button>
-          </div>
-        </div>
+    <section id="education">
+      <h2>Education</h2>
+      <p><strong>Faculty of Electrical Engineering and Informatics</strong><br>
+      Slovak University of Technology, Bratislava<br>
+      <em>Robotics and Cybernetics</em> (September 2020 – Present)</p>
+      <p><strong>Grammar School Pankúchova</strong><br>
+      European Studies — Bratislava (September 2012 – May 2020)</p>
+    </section>
 
-        <div class="card pad">
-          <div><strong>Last updated:</strong> <span id="lastUpdated">—</span></div>
-          <div class="footer-note">Tip: Use the search and chips to instantly filter experience and projects.</div>
-        </div>
-      </aside>
+    <section id="languages">
+      <h2>Languages</h2>
+      <div class="languages">
+        <span class="chip">English (C1 Advanced)</span>
+        <span class="chip">German (A2 Elementary)</span>
+      </div>
+    </section>
 
-      <!-- ======== Main ======== -->
-      <main>
-        <section id="summary" class="card section-card">
-          <h2>Summary</h2>
-          <p>[2–4 sentence professional summary highlighting your focus, strongest skills and achievements.]</p>
-          <ul class="skills" aria-label="Core strengths">
-            <li class="chip">[Strength 1]</li>
-            <li class="chip">[Strength 2]</li>
-            <li class="chip">[Strength 3]</li>
-          </ul>
-        </section>
-
-        <section id="experience" class="card section-card">
-          <h2>Experience</h2>
-          <div class="list">
-            <!-- ===== Item template (duplicate for each role) ===== -->
-            <article class="item filterable" data-tags="python,sql,llm,leadership" data-type="experience">
-              <div class="topline">
-                <div class="role">[Job Title]</div>
-                <div class="org">· [Company]</div>
-                <div class="period">[Start] – [End or Present] · [Location]</div>
-              </div>
-              <details>
-                <summary>Highlights</summary>
-                <ul class="bullets">
-                  <li>Delivered <strong>[impact]</strong> by <em>[doing what]</em>. <span class="chip">python</span> <span class="chip">llm</span></li>
-                  <li>Improved <strong>[metric]</strong> by <strong>[X%]</strong> through <em>[initiative]</em>. <span class="chip">sql</span></li>
-                  <li>Led <strong>[N]</strong> people across <strong>[teams]</strong>. <span class="chip">leadership</span></li>
-                </ul>
-              </details>
-            </article>
-
-            <!-- Add more <article> blocks for each position -->
-          </div>
-        </section>
-
-        <section id="projects" class="card section-card">
-          <h2>Projects</h2>
-          <div class="list">
-            <article class="item filterable" data-tags="python,llm" data-type="project">
-              <div class="topline">
-                <div class="role">[Project Name]</div>
-                <div class="org">· [Role/Context]</div>
-                <div class="period">[Year]</div>
-              </div>
-              <p>[One–two line description of the project, users/scale, notable results.]</p>
-              <div class="tags">
-                <span class="chip">python</span>
-                <span class="chip">llm</span>
-                <a class="chip" href="https://github.com/your-handle/your-repo" target="_blank" rel="noopener">Repo</a>
-                <a class="chip" href="https://demo.example.com" target="_blank" rel="noopener">Demo</a>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section id="skills" class="card section-card">
-          <h2>Skills</h2>
-          <div class="list">
-            <div class="item">
-              <strong>Languages:</strong> Python, SQL, JavaScript, [add]
-            </div>
-            <div class="item">
-              <strong>Data & ML:</strong> Pandas, scikit-learn, Power BI, Prophet/NeuralProphet, [add]
-            </div>
-            <div class="item">
-              <strong>Platforms:</strong> Linux, GitHub Actions, Azure, [add]
-            </div>
-            <div class="item">
-              <strong>Soft skills:</strong> Stakeholder management, communication, leadership, [add]
-            </div>
-          </div>
-        </section>
-
-        <section id="education" class="card section-card">
-          <h2>Education</h2>
-          <div class="list">
-            <div class="item">
-              <div class="topline">
-                <div><strong>[Degree]</strong> · [Institution]</div>
-                <div class="period">[Years]</div>
-              </div>
-              <div>[Focus/Thesis/Key achievements]</div>
-            </div>
-          </div>
-        </section>
-
-        <section id="certs" class="card section-card">
-          <h2>Certifications</h2>
-          <div class="list">
-            <div class="item">
-              <div class="topline"><div><strong>[Certification]</strong> · [Issuer]</div><div class="period">[Year]</div></div>
-              <div class="tags"><a class="chip" href="[Credential URL]" target="_blank" rel="noopener">Verify</a></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="extras" class="card section-card">
-          <h2>Extras</h2>
-          <div class="list">
-            <div class="item"><strong>Languages:</strong> English (C1), Slovak (Native), [add]</div>
-            <div class="item"><strong>Volunteer:</strong> [Org] — [What you did]</div>
-            <div class="item"><strong>Interests:</strong> [Climbing, Volleyball, AI communities, …]</div>
-          </div>
-        </section>
-
-        <p class="footer-note">© <span id="year"></span> [Your Name]. This CV is interactive. Use search, filters and expanders. Print to save as PDF.</p>
-      </main>
-    </div>
-  </div>
-
-  <!-- Schema.org for SEO (fill placeholders) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "[Your Name]",
-    "jobTitle": "[Your Role]",
-    "image": "https://your-domain.com/photo.jpg",
-    "email": "mailto:you@example.com",
-    "url": "https://your-domain.com/",
-    "sameAs": [
-      "https://www.linkedin.com/in/your-handle",
-      "https://github.com/your-handle"
-    ]
-  }
-  </script>
+    <section id="extras">
+      <h2>Additional Information</h2>
+      <p><strong>Driving License:</strong> B</p>
+      <p><strong>Date of Birth:</strong> 8 August 2000</p>
+    </section>
+  </main>
+  <footer>
+    © 2025 Erik Môcik — Interactive CV. Built with HTML/CSS. Hosted on GitHub Pages.
+  </footer>
 
   <script>
-    // ---------- Theme toggle with persistence ----------
-    const root = document.documentElement;
-    function setTheme(mode){
-      if(mode === 'light'){ root.classList.add('light'); } else { root.classList.remove('light'); }
-      localStorage.setItem('cv-theme', mode);
-      toggleBtn.setAttribute('aria-pressed', mode === 'light');
-    }
-    const saved = localStorage.getItem('cv-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    const toggleBtn = document.getElementById('themeToggle');
-    setTheme(saved);
-    toggleBtn.addEventListener('click', () => setTheme(root.classList.contains('light') ? 'dark' : 'light'));
-
-    // ---------- Print to PDF ----------
-    document.getElementById('printBtn').addEventListener('click', () => window.print());
-
-    // ---------- Last updated + year ----------
-    document.getElementById('lastUpdated').textContent = new Date(document.lastModified).toLocaleDateString();
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // ---------- Search across filterable items ----------
-    const search = document.getElementById('search');
-    const filterables = () => Array.from(document.querySelectorAll('.filterable'));
-    search.addEventListener('input', () => {
-      const q = search.value.trim().toLowerCase();
-      filterables().forEach(el => {
-        const text = el.textContent.toLowerCase();
-        el.style.display = text.includes(q) ? '' : 'none';
-      });
+    // Simple theme toggle
+    const header = document.querySelector('header');
+    header.addEventListener('dblclick', () => {
+      document.body.classList.toggle('dark');
+      document.body.style.background = document.body.classList.contains('dark') ? '#111' : '#f8f9fa';
+      document.body.style.color = document.body.classList.contains('dark') ? '#eee' : '#222';
     });
-
-    // ---------- Skill chips filter (sidebar) ----------
-    const chipBox = document.getElementById('skillFilters');
-    let active = new Set();
-    function applyChipFilter(){
-      const tags = Array.from(active);
-      filterables().forEach(el => {
-        const elTags = (el.dataset.tags || '').split(',').map(s => s.trim());
-        const show = tags.length === 0 || tags.every(t => elTags.includes(t));
-        el.style.display = show ? '' : 'none';
-      });
-    }
-    chipBox?.addEventListener('click', (e) => {
-      if(!(e.target instanceof HTMLElement)) return;
-      const chip = e.target.closest('.chip');
-      if(!chip) return;
-      const key = chip.dataset.skill;
-      if(!key) return;
-      if(active.has(key)){ active.delete(key); chip.dataset.active = 'false'; chip.setAttribute('aria-pressed','false'); }
-      else { active.add(key); chip.dataset.active = 'true'; chip.setAttribute('aria-pressed','true'); }
-      applyChipFilter();
-    });
-
-    // ---------- Smooth scroll for in-page anchors ----------
-    document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
-      const id = a.getAttribute('href').slice(1);
-      const el = document.getElementById(id);
-      if(el){ e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    }));
-
   </script>
 </body>
 </html>
